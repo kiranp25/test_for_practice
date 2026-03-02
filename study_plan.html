@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Deep-Dive Study Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent1: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #a8ff78;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 2rem 1.5rem 4rem;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(0,229,255,0.06) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 100%, rgba(255,107,53,0.06) 0%, transparent 60%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  header .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--accent1);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff 30%, var(--accent1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-top: 0.75rem;
+    font-weight: 300;
+  }
+
+  /* Progress Bar */
+  .progress-bar-wrap {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 0.6rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-bar-wrap span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent1);
+    white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3));
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Day Cards Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .day-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-accent);
+  }
+
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--card-bg, #1a1a26), transparent);
+  }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--card-accent);
+    min-width: 2.5ch;
+  }
+
+  .card-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+  }
+
+  .card-title .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--card-accent);
+    opacity: 0.8;
+  }
+
+  .card-body { padding: 1.25rem 1.5rem; }
+
+  .topic-block {
+    margin-bottom: 1rem;
+  }
+
+  .topic-block h3 {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .checklist { list-style: none; }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.4rem 0;
+    font-size: 0.88rem;
+    font-weight: 300;
+    cursor: pointer;
+    border-radius: 6px;
+    padding-left: 0.25rem;
+    transition: background 0.15s;
+  }
+
+  .checklist li:hover { background: rgba(255,255,255,0.03); }
+
+  .checklist li.done .check-label {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 10px;
+  }
+
+  .checklist li.done .check-box {
+    background: var(--card-accent);
+    border-color: var(--card-accent);
+  }
+
+  .time-chip {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--card-accent);
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Tips section */
+  .tip-box {
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .tip { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .tip .icon { font-size: 1.25rem; }
+  .tip h4 { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .tip p { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
+
+  .section-label {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 2rem 0 1rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">📅 Deep-Dive Study Plan · 2 Weeks</div>
+  <h1>Python Data Stack</h1>
+  <p>NumPy → Pandas → PySpark → Pytest &nbsp;·&nbsp; 1 topic at a time, in depth</p>
+</header>
+
+<div class="progress-bar-wrap">
+  <span id="progress-text">0 / 0 tasks done</span>
+  <div class="bar-track"><div class="bar-fill" id="bar"></div></div>
+  <span id="progress-pct">0%</span>
+</div>
+
+<div class="grid" id="cards"></div>
+
+<p class="section-label">⚡ Study Tips</p>
+<div class="tip-box">
+  <div class="tip"><span class="icon">🔁</span><div><h4>Spaced Repetition</h4><p>Review yesterday's topics for 15 min before starting new material.</p></div></div>
+  <div class="tip"><span class="icon">💻</span><div><h4>Code Everything</h4><p>Don't just read. Type every example yourself in a Jupyter notebook.</p></div></div>
+  <div class="tip"><span class="icon">🧩</span><div><h4>Build Mini Projects</h4><p>Apply each topic to a small dataset or real problem you care about.</p></div></div>
+  <div class="tip"><span class="icon">📝</span><div><h4>Cheat Sheets</h4><p>Write your own one-page summary at the end of each topic day.</p></div></div>
+</div>
+
+<script>
+const plan = [
+  {
+    day: "01",
+    title: "NumPy Foundations",
+    badge: "Days 1–3",
+    accent: "#00e5ff",
+    bg: "rgba(0,229,255,0.05)",
+    time: "~5–6 hrs/day",
+    sections: [
+      { name: "Core Concepts", items: ["ndarray: creation, dtype, shape, reshape", "Indexing, slicing, boolean masks", "Broadcasting rules & why it matters", "Vectorized ops vs Python loops (speed test!)"] },
+      { name: "Intermediate", items: ["Universal functions (ufuncs)", "Linear algebra: dot, matmul, linalg", "Random module: distributions & seeds", "Structured arrays & recarrays"] },
+      { name: "Deep Dive", items: ["Memory layout: C vs F order, strides", "Advanced indexing: fancy & np.ix_", "Performance: np.einsum, numexpr", "Write a mini NumPy project (e.g. image manipulation)"] }
+    ]
+  },
+  {
+    day: "04",
+    title: "Pandas Mastery",
+    badge: "Days 4–6",
+    accent: "#ff6b35",
+    bg: "rgba(255,107,53,0.05)",
+    time: "~5–6 hrs/day",
+    sections: [
+      { name: "Core Concepts", items: ["Series & DataFrame: creation, dtypes", "Indexing: loc, iloc, at, iat", "Data loading: CSV, JSON, SQL, Excel", "Handling missing data: isna, fillna, dropna"] },
+      { name: "Intermediate", items: ["GroupBy: split-apply-combine patterns", "Merge, join, concat & reshaping", "String methods: .str accessor", "DateTime: parse, resample, rolling"] },
+      { name: "Deep Dive", items: ["MultiIndex & advanced indexing", "apply, map, applymap vs vectorized ops", "Memory optimization: category dtype", "Build an EDA pipeline on a real dataset"] }
+    ]
+  },
+  {
+    day: "07",
+    title: "PySpark at Scale",
+    badge: "Days 7–10",
+    accent: "#a8ff78",
+    bg: "rgba(168,255,120,0.05)",
+    time: "~5–6 hrs/day",
+    sections: [
+      { name: "Core Concepts", items: ["Spark architecture: driver, executor, DAG", "SparkSession, SparkContext basics", "RDD vs DataFrame vs Dataset", "Reading/writing: CSV, Parquet, JSON"] },
+      { name: "Intermediate", items: ["Transformations vs Actions (lazy eval)", "SQL with createOrReplaceTempView", "Window functions: rank, lag, rolling", "Handling nulls & type casting"] },
+      { name: "Deep Dive", items: ["Partitioning, shuffling & optimization", "UDFs with pandas_udf (Arrow)", "Streaming with Structured Streaming basics", "Run a full ETL pipeline in local mode"] }
+    ]
+  },
+  {
+    day: "11",
+    title: "Pytest & Testing",
+    badge: "Days 11–13",
+    accent: "#f7971e",
+    bg: "rgba(247,151,30,0.05)",
+    time: "~4–5 hrs/day",
+    sections: [
+      { name: "Core Concepts", items: ["Test discovery: naming conventions", "assert statements & built-in checks", "Running tests: flags, -v, -k, -x", "Testing functions, classes, exceptions"] },
+      { name: "Intermediate", items: ["Fixtures: scope, yield, autouse", "Parametrize: @pytest.mark.parametrize", "Markers: skip, xfail, custom", "Conftest.py & shared fixtures"] },
+      { name: "Deep Dive", items: ["Mocking with monkeypatch & unittest.mock", "Coverage with pytest-cov", "Testing Pandas DataFrames & NumPy arrays", "Write a full test suite for your mini projects"] }
+    ]
+  },
+  {
+    day: "14",
+    title: "Review & Consolidate",
+    badge: "Day 14",
+    accent: "#c084fc",
+    bg: "rgba(192,132,252,0.05)",
+    time: "Full day",
+    sections: [
+      { name: "Consolidation", items: ["Re-read all 4 personal cheat sheets", "Fix any weak spots or confusing topics", "Build an end-to-end project: ingest data → NumPy/Pandas transform → PySpark scale → Pytest suite", "Publish to GitHub & write a README"] }
+    ]
+  }
+];
+
+const grid = document.getElementById("cards");
+let allItems = [];
+
+plan.forEach(day => {
+  const card = document.createElement("div");
+  card.className = "day-card";
+  card.style.setProperty("--card-accent", day.accent);
+  card.style.setProperty("--card-bg", day.bg);
+
+  let bodyHTML = `<div class="card-body">`;
+  day.sections.forEach(sec => {
+    bodyHTML += `<div class="topic-block">`;
+    bodyHTML += `<span class="time-chip">${day.time}</span>`;
+    bodyHTML += `<h3>${sec.name}</h3><ul class="checklist">`;
+    sec.items.forEach((item, i) => {
+      const id = `${day.day}-${sec.name.replace(/\s/g,'')}-${i}`;
+      allItems.push(id);
+      bodyHTML += `<li id="${id}" onclick="toggle('${id}')"><div class="check-box">✓</div><span class="check-label">${item}</span></li>`;
+    });
+    bodyHTML += `</ul></div>`;
+  });
+  bodyHTML += `</div>`;
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="day-num">${day.day}</div>
+      <div class="card-title">
+        <h2>${day.title}</h2>
+        <div class="badge">${day.badge}</div>
+      </div>
+    </div>
+    ${bodyHTML}
+  `;
+  grid.appendChild(card);
+});
+
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle("done");
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = document.querySelectorAll(".checklist li.done").length;
+  const total = allItems.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById("progress-text").textContent = `${done} / ${total} tasks done`;
+  document.getElementById("progress-pct").textContent = `${pct}%`;
+  document.getElementById("bar").style.width = pct + "%";
+}
+
+updateProgress();
+</script>
+</body>
+</html>

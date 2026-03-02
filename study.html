@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1-Day Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #fff;
+    --border: #e0d8cc;
+    --text: #1a1a1a;
+    --muted: #888;
+    --c1: #e63946;  /* numpy - red */
+    --c2: #2a7d4f;  /* pandas - green */
+    --c3: #1d4e89;  /* pyspark - blue */
+    --c4: #7b2d8b;  /* pytest - purple */
+    --c5: #c77b00;  /* review - amber */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 2rem 1.5rem 5rem;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d6cfc4' stroke-width='0.5'%3E%3Cpath d='M0 20h40M20 0v40'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  header {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    border-bottom: 3px solid #1a1a1a;
+    padding-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: #1a1a1a;
+  }
+
+  header h1 span { color: var(--c1); }
+
+  .meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* Timeline */
+  .timeline {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 54px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .block {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .time-col {
+    flex-shrink: 0;
+    width: 54px;
+    text-align: right;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding-top: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .dot {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--block-color);
+    border: 2px solid var(--bg);
+    margin-top: 1rem;
+    box-shadow: 0 0 0 2px var(--block-color);
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    flex: 1;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-left: 4px solid var(--block-color);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-top {
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.015);
+  }
+
+  .card-top h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.05em;
+    color: var(--block-color);
+  }
+
+  .duration {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .card-body {
+    padding: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 560px) { .card-body { grid-template-columns: 1fr; } }
+
+  .col-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .checklist { list-style: none; }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.3rem 0.25rem;
+    font-size: 0.83rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.1s;
+    line-height: 1.4;
+  }
+
+  .checklist li:hover { background: rgba(0,0,0,0.03); }
+
+  .checklist li.done .lbl {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .cb {
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid #ccc;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #fff;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .checklist li.done .cb {
+    background: var(--block-color);
+    border-color: var(--block-color);
+  }
+
+  /* Q&A pills */
+  .qa-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .pill {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    border: 1px solid var(--block-color);
+    color: var(--block-color);
+    background: transparent;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    line-height: 1.3;
+  }
+
+  .pill.answered {
+    background: var(--block-color);
+    color: #fff;
+  }
+
+  /* Break block */
+  .break-block {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .break-block .time-col { padding-top: 0; }
+
+  .break-line {
+    flex: 1;
+    border-top: 1.5px dashed var(--border);
+    display: flex;
+    align-items: center;
+    padding-left: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Progress */
+  .sticky-progress {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 100;
+  }
+
+  .sticky-progress span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: #aaa;
+  }
+
+  .sticky-progress strong {
+    color: #fff;
+    font-size: 0.8rem;
+  }
+
+  .prog-track {
+    flex: 1;
+    height: 5px;
+    background: #333;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, var(--c1), var(--c4));
+    transition: width 0.4s;
+    width: 0%;
+  }
+
+  .emoji-celebrate {
+    font-size: 1.1rem;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>1-Day<br>Interview <span>Prep</span></h1>
+  <div class="meta">
+    NumPy · Pandas · PySpark · Pytest<br>
+    ~8 hours · Focus Mode 🔥<br>
+    Check off each task as you go
+  </div>
+</header>
+
+<div class="timeline" id="timeline"></div>
+
+<div class="sticky-progress">
+  <strong id="prog-label">0%</strong>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+  <span id="prog-detail">0 / 0 done</span>
+  <span class="emoji-celebrate" id="celebrate">🎉 Ready!</span>
+</div>
+
+<script>
+const blocks = [
+  {
+    time: "8:00\nAM",
+    color: "var(--c1)",
+    title: "NumPy — Core Interview Topics",
+    duration: "1.5 hrs",
+    topics: [
+      "ndarray, shape, dtype, reshape, flatten",
+      "Indexing, slicing, boolean masks",
+      "Broadcasting — how & why",
+      "Vectorized ops vs loops (performance)",
+      "np.where, np.unique, np.concatenate",
+      "axis parameter in sum/mean/etc.",
+    ],
+    questions: [
+      "What is broadcasting?",
+      "ndarray vs Python list?",
+      "How does axis work?",
+      "Fancy vs basic indexing?",
+      "copy() vs view()?",
+      "When use np.vectorize?",
+    ]
+  },
+  { type: "break", time: "9:30", label: "☕ Break — 15 min. Stretch, water, breathe." },
+  {
+    time: "9:45\nAM",
+    color: "var(--c2)",
+    title: "Pandas — Core Interview Topics",
+    duration: "2 hrs",
+    topics: [
+      "Series vs DataFrame internals",
+      "loc vs iloc vs at vs iat",
+      "groupby + agg patterns",
+      "merge vs join vs concat",
+      "Handling NaN: fillna, dropna, interpolate",
+      "apply vs map vs vectorized ops",
+      "pivot_table vs crosstab",
+      "Memory: category dtype, chunking",
+    ],
+    questions: [
+      "loc vs iloc?",
+      "GroupBy split-apply-combine?",
+      "merge types: inner/outer/left?",
+      "When use apply() vs vectorize?",
+      "Handle large CSVs in Pandas?",
+      "What is method chaining?",
+    ]
+  },
+  { type: "break", time: "11:45", label: "🍽️ Lunch Break — 30 min. Step away from the screen!" },
+  {
+    time: "12:15\nPM",
+    color: "var(--c3)",
+    title: "PySpark — Core Interview Topics",
+    duration: "2 hrs",
+    topics: [
+      "Spark architecture: driver, executors, DAG",
+      "RDD vs DataFrame vs Dataset",
+      "Transformations (lazy) vs Actions (trigger)",
+      "Partitioning, shuffling, repartition vs coalesce",
+      "Window functions: rank, lag, rowsBetween",
+      "Joins in Spark — broadcast join optimization",
+      "UDFs: regular vs pandas_udf (Arrow)",
+      "Parquet vs CSV — why Parquet for Spark",
+    ],
+    questions: [
+      "Lazy evaluation explained?",
+      "RDD vs DataFrame?",
+      "What causes a shuffle?",
+      "repartition vs coalesce?",
+      "Broadcast join — when/why?",
+      "Why avoid Python UDFs?",
+      "Catalyst optimizer role?",
+      "Structured Streaming basics?",
+    ]
+  },
+  { type: "break", time: "2:15\nPM", label: "☕ Break — 15 min. Quick walk if possible." },
+  {
+    time: "2:30\nPM",
+    color: "var(--c4)",
+    title: "Pytest — Core Interview Topics",
+    duration: "1.5 hrs",
+    topics: [
+      "Test discovery: naming conventions",
+      "Fixtures: scope (function/class/module/session)",
+      "@pytest.mark.parametrize",
+      "conftest.py — shared fixtures",
+      "Mocking: monkeypatch vs unittest.mock",
+      "pytest-cov for coverage reports",
+      "skip, xfail markers",
+      "Testing DataFrames with assert_frame_equal",
+    ],
+    questions: [
+      "Fixture scope differences?",
+      "parametrize vs fixture?",
+      "monkeypatch vs mock.patch?",
+      "What is conftest.py?",
+      "How to test exceptions?",
+      "Coverage — 100% always needed?",
+    ]
+  },
+  { type: "break", time: "4:00\nPM", label: "😌 Rest — 15 min. No screens." },
+  {
+    time: "4:15\nPM",
+    color: "var(--c5)",
+    title: "Final Review — Weak Spots & Q&A Practice",
+    duration: "1 hr",
+    topics: [
+      "Re-read any notes from today",
+      "Revisit unchecked Q&A pills above",
+      "Write answers to 2–3 hardest questions",
+      "Practice explaining topics out loud",
+      "Prep: 'Tell me about a project using these tools'",
+    ],
+    questions: [
+      "NumPy vs Pandas use cases?",
+      "Pandas vs PySpark — when each?",
+      "End-to-end pipeline design?",
+      "Debugging a failing test?",
+    ]
+  }
+];
+
+const timeline = document.getElementById("timeline");
+let totalTasks = 0, totalQs = 0;
+
+blocks.forEach((b, bi) => {
+  if (b.type === "break") {
+    timeline.innerHTML += `
+      <div class="break-block">
+        <div class="time-col">${b.time}</div>
+        <div style="width:14px;flex-shrink:0"></div>
+        <div class="break-line">${b.label}</div>
+      </div>`;
+    return;
+  }
+
+  let topicsHTML = b.topics.map((t, i) => {
+    const id = `t-${bi}-${i}`;
+    totalTasks++;
+    return `<li id="${id}" onclick="toggleItem('${id}')"><div class="cb">✓</div><span class="lbl">${t}</span></li>`;
+  }).join("");
+
+  let qHTML = b.questions.map((q, i) => {
+    const id = `q-${bi}-${i}`;
+    totalQs++;
+    return `<span class="pill" id="${id}" onclick="togglePill('${id}')">${q}</span>`;
+  }).join("");
+
+  timeline.innerHTML += `
+    <div class="block" style="--block-color:${b.color}">
+      <div class="time-col">${b.time}</div>
+      <div class="dot" style="background:${b.color};box-shadow:0 0 0 2px ${b.color}"></div>
+      <div class="card" style="border-left-color:${b.color}">
+        <div class="card-top">
+          <h2 style="color:${b.color}">${b.title}</h2>
+          <span class="duration">${b.duration}</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="col-title">📚 Study Checklist</div>
+            <ul class="checklist">${topicsHTML}</ul>
+          </div>
+          <div>
+            <div class="col-title">🎤 Practice Questions — tap when ready</div>
+            <div class="qa-pills">${qHTML}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+});
+
+const grandTotal = totalTasks + totalQs;
+document.getElementById("prog-detail").textContent = `0 / ${grandTotal} done`;
+
+function updateProgress() {
+  const done = document.querySelectorAll(".checklist li.done, .pill.answered").length;
+  const pct = Math.round((done / grandTotal) * 100);
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-label").textContent = pct + "%";
+  document.getElementById("prog-detail").textContent = `${done} / ${grandTotal} done`;
+  const cel = document.getElementById("celebrate");
+  cel.style.display = pct >= 100 ? "inline" : "none";
+}
+
+function toggleItem(id) {
+  document.getElementById(id).classList.toggle("done");
+  updateProgress();
+}
+
+function togglePill(id) {
+  document.getElementById(id).classList.toggle("answered");
+  updateProgress();
+}
+
+updateProgress();
+</script>
+</body>
+</html>
